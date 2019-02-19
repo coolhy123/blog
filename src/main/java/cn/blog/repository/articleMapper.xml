@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+        <mapper namespace="cn.blog.mapper.blog.ArticleMapper">
+            <resultMap id="ArticleResultMap" type="cn.blog.entity.article.Article">
+                <id property="articleId" column="article_id" ></id>
+                <result property="articleTitle" column="article_titlle" ></result>
+                <result property="articleContent" column="article_content" ></result>
+                <result property="articlePublished" column="article_published" ></result>
+                <result property="articleReadcount" column="article_readcount" ></result>
+                <result property="articleRequirement" column="article_requirement" ></result>
+                <result property="userId" column="user_id" ></result>
+
+            </resultMap>
+
+            <sql id="base_cloumn">
+                article_id,article_titlle,article_content,article_published,article_readcount,article_requirement,user_id
+            </sql>
+
+            <select id="getAllBlog" resultMap="ArticleResultMap">
+                SELECT
+                <include refid="base_cloumn" />
+                from article
+
+            </select>
+
+            <!-- 按时间排序查询所有博客-->
+            <select id="getAllBlogOrderByTime" resultMap="ArticleResultMap">
+                SELECT
+                <include refid="base_cloumn"/>
+                from article ORDER BY article_published DESC
+            </select>
+
+
+    <!-- 查询某一篇博客-->
+    <select id="getOneBlogByBlogId" parameterType="String" resultType="cn.blog.entity.article.Article">
+              SELECT  a.article_id,a.article_titlle,a.article_content,a.article_published,a.article_readcount,a.article_requirement,a.user_id,u.user_name from article a
+              JOIN user u on a.user_id=u.user_id where a.article_id='12312313'
+    </select>
+
+
+    <!-- 按访问量高低查询-->
+    <select id="getAllBlogOrderByReadAccount"  resultMap="ArticleResultMap">
+        SELECT
+        <include refid="base_cloumn" />
+        from article order by article_readcount desc
+    </select>
+
+    <!-- 查询最新十篇博客-->
+    <select id="getAllBlogOrderByReadAccountTopTen"  resultMap="ArticleResultMap">
+        SELECT
+        <include refid="base_cloumn" />
+        from article order by article_published  DESC  limit 10
+    </select>
+
+    <delete id="deleteBlogByBlogId" parameterType="String" >
+        delete from article where article_id=#{articleId}
+    </delete>
+        </mapper>
+
+
+
+
